@@ -5,6 +5,7 @@ x-basics: &basics
 services:
   postgres:
     image: postgres:${POSTGRES_VERSION:-latest}
+    container_name: postgres
     networks:
       core:
         ipv4_address: 172.20.0.6
