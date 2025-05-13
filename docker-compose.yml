@@ -1,0 +1,26 @@
+x-basics: &basics
+  env_file:
+    - .env
+  restart: unless-stopped
+services:
+  postgre-db:
+    image: postgres:latest
+    container_name: db-postgre
+    networks:
+      core:
+        ipv4_address: 172.20.0.6
+    <<: *basics
+    environment:
+      - POSTGRES_DATABASES=${POSTGRES_DATABASES}
+      - POSTGRES_USERS=${POSTGRES_USERS}
+      - POSTGRES_PASSWORDS=${POSTGRES_PASSWORDS}
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=${ROOT_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${ROOT_USERNAME-root}"]
+      start_period: 60s
+      timeout: 15s
+      retries: 10
+    volumes:
+      - ~/volumes/database/postgre:/var/lib/postgresql/data
+      - ./init_scripts/postgres-init.sh:/docker-entrypoint-initdb.d/postgres-init.sh
