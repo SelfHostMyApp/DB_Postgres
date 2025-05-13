@@ -1,0 +1,20 @@
+#!/bin/bash
+set -e
+
+IFS=',' read -ra DATABASES <<<"$POSTGRES_DATABASES"
+IFS=',' read -ra USERS <<<"$POSTGRES_USERS"
+IFS=',' read -ra PASSWORDS <<<"$POSTGRES_PASSWORDS"
+
+for i in "${!DATABASES[@]}"; do
+    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<EOSQL
+CREATE DATABASE ${DATABASES[i]};
+CREATE USER ${USERS[i]} WITH PASSWORD '${PASSWORDS[i]}';
+GRANT ALL PRIVILEGES ON DATABASE ${DATABASES[i]} TO ${USERS[i]};
+EOSQL
+
+    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "${DATABASES[i]}" <<EOSQL
+GRANT USAGE ON SCHEMA public TO ${USERS[i]};
+GRANT CREATE ON SCHEMA public TO ${USERS[i]};
+GRANT ALL ON SCHEMA public TO ${USERS[i]};
+EOSQL
+done

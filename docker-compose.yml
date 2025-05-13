@@ -3,9 +3,8 @@ x-basics: &basics
     - .env
   restart: unless-stopped
 services:
-  postgre-db:
+  postgres:
     image: postgres:latest
-    container_name: db-postgre
     networks:
       core:
         ipv4_address: 172.20.0.6
