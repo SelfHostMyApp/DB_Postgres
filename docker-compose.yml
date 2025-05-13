@@ -4,7 +4,7 @@ x-basics: &basics
   restart: unless-stopped
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:${POSTGRES_VERSION:-latest}
     networks:
       core:
         ipv4_address: 172.20.0.6
