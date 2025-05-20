@@ -8,7 +8,7 @@ services:
     container_name: postgres
     networks:
       core:
-        ipv4_address: 172.20.0.6
+        ipv4_address: 172.20.0.12
     <<: *basics
     environment:
       - POSTGRES_DATABASES=${POSTGRES_DATABASES}
@@ -17,7 +17,7 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=${ROOT_PASSWORD}
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${ROOT_USERNAME-root}" ]
+      test: ["CMD-SHELL", "pg_isready -U ${ROOT_USERNAME-root}"]
       start_period: 60s
       timeout: 15s
       retries: 10
